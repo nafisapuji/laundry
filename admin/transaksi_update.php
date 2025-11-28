@@ -35,5 +35,5 @@ for ($x=0;$x<count($jenis_pakaian);$x++){
     }
 }
 
-header("location:transaksi.php");
+ echo "<script>alert('Data anda telah diubah'); window.location.href='transaksi.php'</script>";
 ?>
