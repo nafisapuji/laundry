@@ -1,144 +1,140 @@
 <?php
-	include 'header.php';
-	include '../koneksi.php';
+session_start();
+
+// CEK LOGIN ADMIN
+if (!isset($_SESSION['status']) || $_SESSION['status'] != "login" || $_SESSION['user_status'] != "admin") {
+    header("Location: ../index.php?pesan=belum_login");
+    exit();
+}
+
+include '../koneksi.php';
+include 'header.php';
+
+// Statistik Admin
+$total_user = mysqli_fetch_assoc(mysqli_query($conn,
+    "SELECT COUNT(*) AS total FROM user WHERE user_status='user'"
+))['total'];
+
+$total_kendaraan = mysqli_fetch_assoc(mysqli_query($conn,
+    "SELECT COUNT(*) AS total FROM kendaraan"
+))['total'];
+
+$total_pinjam_aktif = mysqli_fetch_assoc(mysqli_query($conn,
+    "SELECT COUNT(*) AS total FROM pinjam WHERE pinjam_status='Dipinjam'"
+))['total'];
+
+$total_pinjam_selesai = mysqli_fetch_assoc(mysqli_query($conn,
+    "SELECT COUNT(*) AS total FROM pinjam WHERE pinjam_status='Kembali'"
+))['total'];
+
 ?>
 
-<div class="container">
-	<div class="alert alert-info text-center">
-		<h4 style="margin-bottom: 0px;"><b> Selamat Datang! </b> di Sistem Informasi Laundry </h4>
-	</div>
+<!-- CONTENT -->
+<div class="container mt-4">
 
-	<div class="panel">
-		<div class="panel-heading">
-			<h4>Dashboard</h4>
-		</div>
+    <!-- Judul -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold"><i class="bi bi-speedometer2"></i> Dashboard Admin</h2>
+        <h5 class="text-secondary">Selamat datang, <?= $_SESSION['user_nama']; ?> 👋</h5>
+    </div>
 
-		<div class="panel-body">
-			<div class="row">
+    <!-- STATISTIK -->
+    <div class="row justify-content-center">
 
-				<div class="col-md-3">
-					<div class="panel panel-primary">
-						<div class="panel-heading">
-							<h1>
-								<i class="glyphicon glyphicon-user"></i>
-								<span class="pull-right">
-									<?php
-										$pelanggan = mysqli_query($koneksi, "select * from pelanggan");
-										echo mysqli_num_rows($pelanggan);
-									?>
-								</span>
-							</h1>
-							Jumlah Pelanggan
-						</div>
-					</div>
-				</div>
+        <!-- Total User -->
+        <div class="col-md-3 mb-3">
+            <div class="card shadow rounded-4 border-0" style="background:#e0f2fe;">
+                <div class="card-body text-center">
+                    <h5 class="fw-bold text-primary"><i class="bi bi-people-fill"></i> Total User</h5>
+                    <h2 class="fw-bold"><?= $total_user; ?></h2>
+                    <a href="user.php" class="btn btn-primary w-100 mt-2 rounded-pill">
+                        Kelola User
+                    </a>
+                </div>
+            </div>
+        </div>
 
-				<div class="col-md-3">
-					<div class="panel panel-warning">
-						<div class="panel-heading">
-							<h1>
-								<i class="glyphicon glyphicon-retweet"></i>
-								<span class="pull-right">
-									<?php
-										$proses = mysqli_query($koneksi, "select * from transaksi where transaksi_status='0'");
-										echo mysqli_num_rows($proses);
-									?>
-								</span>
-							</h1>
-							Jumlah Cucian Diproses
-						</div>
-					</div>
-				</div>
+        <!-- Total Kendaraan -->
+        <div class="col-md-3 mb-3">
+            <div class="card shadow rounded-4 border-0" style="background:#dcfce7;">
+                <div class="card-body text-center">
+                    <h5 class="fw-bold text-success"><i class="bi bi-car-front-fill"></i> Total Kendaraan</h5>
+                    <h2 class="fw-bold"><?= $total_kendaraan; ?></h2>
+                    <a href="kendaraan.php" class="btn btn-success w-100 mt-2 rounded-pill">
+                        Lihat Kendaraan
+                    </a>
+                </div>
+            </div>
+        </div>
 
-				<div class="col-md-3">
-					<div class="panel panel-info">
-						<div class="panel-heading">
-							<h1>
-								<i class="glyphicon glyphicon-info-sign"></i>
-								<span class="pull-right">
-									<?php
-										$proses = mysqli_query($koneksi, "select * from transaksi where transaksi_status='1'");
-										echo mysqli_num_rows($proses);
-									?>
-								</span>
-							</h1>
-							Jumlah Cucian Siap Ambil
-						</div>
-					</div>
-				</div>
+        <!-- Peminjaman Aktif -->
+        <div class="col-md-3 mb-3">
+            <div class="card shadow rounded-4 border-0" style="background:#fff7cd;">
+                <div class="card-body text-center">
+                    <h5 class="fw-bold text-warning"><i class="bi bi-hourglass-split"></i> Dipinjam</h5>
+                    <h2 class="fw-bold"><?= $total_pinjam_aktif; ?></h2>
+                    <a href="pinjam.php" class="btn btn-warning w-100 text-dark mt-2 rounded-pill">
+                        Lihat Pinjaman
+                    </a>
+                </div>
+            </div>
+        </div>
 
-				<div class="col-md-3">
-					<div class="panel panel-success">
-						<div class="panel-heading">
-							<h1>
-								<i class="glyphicon glyphicon-ok-circle"></i>
-								<span class="pull-right">
-									<?php
-										$proses = mysqli_query($koneksi, "select * from transaksi where transaksi_status='2'");
-										echo mysqli_num_rows($proses);
-									?>
-								</span>
-							</h1>
-							Jumlah Cucian Selesai
-						</div>
-					</div>
-				</div>
+        <!-- Pinjaman Selesai -->
+        <div class="col-md-3 mb-3">
+            <div class="card shadow rounded-4 border-0" style="background:#f3e8ff;">
+                <div class="card-body text-center">
+                    <h5 class="fw-bold text-purple"><i class="bi bi-check-circle-fill"></i> Selesai</h5>
+                    <h2 class="fw-bold"><?= $total_pinjam_selesai; ?></h2>
+                    <a href="pinjam.php" class="btn btn-secondary w-100 mt-2 rounded-pill">
+                        Riwayat Pinjam
+                    </a>
+                </div>
+            </div>
+        </div>
 
-			</div>
-		</div>
-	</div>
+    </div>
 
-	<div class="panel">
-		<div class="panel-heading">
-			<h4>Riwayat Transaksi Terakhir</h4>
-		</div>
-		<div class="panel-body">
-			<table class="table table-bordered table-striped">
-				<tr>
-					<th width="1%">NO</th>
-					<th>Invoice</th>
-					<th>Tanggal</th>
-					<th>Pelanggan</th>
-					<th>Berat</th>
-					<th>Tgl Selesai</th>
-					<th>Harga</th>
-					<th>Status</th>
-				</tr>
-				<?php
-					$data = mysqli_query($koneksi, "select * from pelanggan, transaksi where transaksi_pelanggan=pelanggan_id order by transaksi_id desc limit 10");
-					$no = 1;
-					while ($d=mysqli_fetch_array($data)){
-				?>
-					<tr>
-						<td><?php echo $no++; ?></td>
-						<td><?php echo $d['transaksi_id']; ?></td>
-						<td><?php echo $d['transaksi_tgl']; ?></td>
-						<td><?php echo $d['pelanggan_nama']; ?></td>
-						<td><?php echo $d['transaksi_berat']; ?></td>
-						<td><?php echo $d['transaksi_tgl_selesai']; ?></td>
-						<td><?php echo "Rp. ".number_format($d['transaksi_harga']); ?></td>
+    <!-- Riwayat Terbaru -->
+    <div class="mt-5">
+        <h4 class="fw-bold"><i class="bi bi-clock-history"></i> Riwayat Peminjaman Terbaru</h4>
 
-						<td>
-							<?php
-							if ($d['transaksi_status']==0){
-								echo "<div class='label label-warning'>PROSES</div>";
-							}elseif ($d['transaksi_status']==1){
-								echo "<div class='label label-info'>DICUCI</div>";
-							}elseif ($d['transaksi_status']==2){
-								echo "<div class='label label-success'>SELESAI</div>";
-							}
-							?>
-						</td>
-					</tr>				
-				<?php
-					}
-				?>
-			</table>
-		</div>
-	</div>
+        <table class="table table-striped mt-3 shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Kendaraan</th>
+                    <th>Tgl Pinjam</th>
+                    <th>Tgl Kembali</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php
+                $q = mysqli_query($conn, "
+                    SELECT p.*, u.user_nama, k.kendaraan_nama 
+                    FROM pinjam p
+                    JOIN user u ON u.user_id = p.user_id
+                    JOIN kendaraan k ON k.kendaraan_id = p.kendaraan_id
+                    ORDER BY p.pinjam_id DESC LIMIT 10
+                ");
+
+                while ($t = mysqli_fetch_assoc($q)) {
+                ?>
+                <tr>
+                    <td><?= $t['pinjam_id']; ?></td>
+                    <td><?= $t['user_nama']; ?></td>
+                    <td><?= $t['kendaraan_nama']; ?></td>
+                    <td><?= $t['tgl_pinjam']; ?></td>
+                    <td><?= $t['tgl_kembali']; ?></td>
+                    <td><?= $t['pinjam_status']; ?></td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
 
 </div>
 
-<?php
-include 'footer.php';
-?>

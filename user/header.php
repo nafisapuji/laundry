@@ -3,8 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// CEK LOGIN ADMIN
-if (!isset($_SESSION['status']) || $_SESSION['status'] != "login" || $_SESSION['user_status'] != "admin") {
+if (!isset($_SESSION['status']) || $_SESSION['status'] != "login" || $_SESSION['user_status'] != "user") {
     header("Location: ../index.php?pesan=belum_login");
     exit();
 }
@@ -14,25 +13,23 @@ if (!isset($_SESSION['status']) || $_SESSION['status'] != "login" || $_SESSION['
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Rental</title>
+    <title>User Rental</title>
 
-    <!-- Bootstrap -->
     <link rel="stylesheet" 
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
-    <!-- Icons -->
     <link rel="stylesheet" 
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     <style>
         body {
-            background: linear-gradient(135deg, #dbeafe, #f3e8ff, #ffffff);
+            background: linear-gradient(135deg, #dbeafe, #f3e8ff, #fff);
             min-height: 100vh;
         }
 
         /* NAVBAR */
         .navbar-custom {
-            background: linear-gradient(90deg, #0a58ca, #4e8cff);
+            background: linear-gradient(90deg, #0061ff, #5b9dff);
             box-shadow: 0 3px 10px rgba(0,0,0,0.15);
         }
 
@@ -86,18 +83,16 @@ if (!isset($_SESSION['status']) || $_SESSION['status'] != "login" || $_SESSION['
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar navbar-dark navbar-custom">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="index.php">
-            <i class="bi bi-speedometer2"></i> Rental Skanega - Admin
+            <i class="bi bi-car-front-fill"></i> Rental Skanega - User
         </a>
 
         <div>
             <span class="text-white me-3">
-                <i class="bi bi-person-circle"></i> Admin: <?= $_SESSION['user_nama']; ?>
+                <i class="bi bi-person-circle"></i> Halo, <?= $_SESSION['user_nama']; ?>
             </span>
-
             <a href="../logout.php">Logout</a>
 
 
@@ -106,15 +101,20 @@ if (!isset($_SESSION['status']) || $_SESSION['status'] != "login" || $_SESSION['
     </div>
 </nav>
 
-<!-- SIDEBAR -->
 <div class="sidebar">
-    <h5><i class="bi bi-grid-fill"></i> Menu Admin</h5>
+    <h5><i class="bi bi-grid-fill"></i> Menu User</h5>
 
-    <a href="index.php"><i class="bi bi-speedometer"></i> Dashboard</a>
-    <a href="user.php"><i class="bi bi-people-fill"></i> Data User</a>
-    <a href="kendaraan.php"><i class="bi bi-car-front-fill"></i> Data Kendaraan</a>
-    <a href="pinjam.php"><i class="bi bi-clock-history"></i> Data Peminjaman</a>
+    <a href="index.php">
+        <i class="bi bi-speedometer"></i> Dashboard
+    </a>
+
+    <a href="kendaraan.php">
+        <i class="bi bi-car-front-fill"></i> Kendaraan Tersedia
+    </a>
+
+    <a href="pinjam.php">
+        <i class="bi bi-clock-history"></i> Riwayat Pinjam
+    </a>
 </div>
 
-<!-- CONTENT MULAI DI FILE LAIN -->
 <div class="content">
